@@ -1,40 +1,33 @@
+import random
 class Laundry:
   def __init__(self, name, pickup, delivery):
     self.name = name
     self.schedule_pickup = pickup
-    self.schedule_delivery = delivery
-    self.clients = dict()
+    self.delivery_rate = delivery
     self.orders = dict()
 
-  def accept_client(self, client_name):
-    if client_name not in self.clients:
-      self.clients[client_name] = True
-      return f"{client_name} berhasil mengikuti laundry {self.name}"
-    else:
-      return f"Anda sudah mengikuti laundry {self.name}"
+  def getName(self):
+    return self.name
+
+  def show_schedule(self, type):
+    if type == "pickup":
+      return self.schedule_pickup
+    
+    elif type == "delivery":
+      return self.delivery_rate
   
-  def show_schedule(self, client_name, type):
-    if client_name not in self.clients:
-      return f"Anda belum meng-follow laundry {self.name}"
-    else:
-      if type == "pickup":
-        return self.schedule_pickup
-      elif type == "delivery":
-        return self.schedule_delivery
+  def place_order(self, client_name):
+    order_id = len(self.orders) + 1
+    self.orders[str(order_id)] = {
+      "order_id": order_id,
+      "client_name": client_name, 
+      "estimasi_pengiriman": random.choice(self.schedule_pickup),
+    }
+
+    return f"Berhasil memesan. Order ID : {order_id}\n{self.orders[str(order_id)]}"
   
-  def place_order(self, client_name, pickup_time):
-    if client_name not in self.clients:
-      return f"Anda belum meng-follow laundry {self.name}"
-    else:
-      order_id = len(self.orders) + 1
-      self.orders[order_id] = {
-        "client_name": client_name, 
-        "pickup_time": pickup_time,
-      }
-      return f"Berhasil memesan. Order ID : {order_id}"
-  
-  def get_orders(self, client_name):
-    if client_name not in self.clients:
-      return f"Anda belum meng-follow laundry {self.name}"
-    else:
-      return {k: v for k, v in self.orders.items() if v["client_name"] == client_name}
+  def get_orders(self, name):
+    name_orders = [order for order_id, order in self.orders.items() if order["client_name"] == name]
+    if not name_orders:
+      return "Pelanggan tidak memiliki Order"
+    return "\n".join(f"{order}" for order in name_orders)

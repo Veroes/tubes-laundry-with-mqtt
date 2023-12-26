@@ -23,7 +23,6 @@ class Laundry:
       "client_name": client_name, 
       "estimasi_pengiriman": random.choice(self.schedule_pickup),
     }
-
     return f"Berhasil memesan. Order ID : {order_id}\n{self.orders[str(order_id)]}"
   
   def get_orders(self, name):
